@@ -3,27 +3,30 @@
 """
 A small example subscriber
 """
-import paho.mqtt.client as paho
+import paho.mqtt.client as mqtt
 
-def on_message(mosq, obj, msg):
-    print("%-20s %d %s" % (msg.topic, msg.qos, msg.payload))
-    mosq.publish('pong', 'ack', 0)
+# The callback for when the client receives a CONNACK response from the server.
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
 
-def on_publish(mosq, obj, mid):
-    pass
-
-if __name__ == '__main__':
-    client = paho.Client()
-    client.on_message = on_message
-    client.on_publish = on_publish
-
-    #client.tls_set('root.ca', certfile='c1.crt', keyfile='c1.key')
-    client.connect("127.0.0.1", 1883, 60)
-
+    # Subscribing in on_connect() means that if we lose the connection and
+    # reconnect then subscriptions will be renewed.
+    # client.subscribe("$SYS/#")
     client.subscribe("gatos/yolo", 0)
     client.subscribe("perros/#", 0)
 
-    while client.loop() == 0:
-        pass
+# The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    print(msg.topic+" "+str(msg.payload))
 
-# vi: set fileencoding=utf-8 :
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+
+client.connect("test.mosquitto.org", 1883, 60)
+
+# Blocking call that processes network traffic, dispatches callbacks and
+# handles reconnecting.
+# Other loop*() functions are available that give a threaded interface and a
+# manual interface.
+client.loop_forever()
