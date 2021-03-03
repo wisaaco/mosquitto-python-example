@@ -7,7 +7,7 @@ forked project
 #### Plan A. 
 Using test server: https://test.mosquitto.org/
 
-#### Plan B. 
+#### Plan B. 
 Requires [Mosquitto](http://mosquitto.org/) to be installed.
 
 On Linux/Ubuntu with the **apt-get** package manager:
