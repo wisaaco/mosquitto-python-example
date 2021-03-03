@@ -3,23 +3,19 @@
 """ 
 Publish some messages to queue
 """
-import paho.mqtt.publish as publish
+import paho.mqtt.client as mqtt
 
+client = mqtt.Client()
 
 msgs = [{'topic': "gatos/yolo", 'payload': "jump"},
         {'topic': "perros/pics", 'payload': "some photo"},
         {'topic': "perros/news", 'payload': "extra extra"},
         {'topic': "perros/news", 'payload': "super extra"}]
 
-host = "localhost"
 
+client.connect("test.mosquitto.org", 1883, 60)
+client.publish("gatos/yolo","HOLA MUNDO, ¿alguién me escucha?")
 
-if __name__ == '__main__':
-    # publish a single message
-    publish.single(topic="gatos/yolo", payload="just do it", hostname=host)
-
-    # publish multiple messages
-    publish.multiple(msgs, hostname=host)
 
 
 # vi: set fileencoding=utf-8 :
